@@ -182,7 +182,7 @@
            });
     
     map.on('click', 'Event-point',function(e) {
-        new mapboxgl.Popup().setLngLat(e.features[0].geometry.coordinates).setHTML('<b>Event type:</b> ' + e.features[0].properties.event_type).addTo(map);
+        new mapboxgl.Popup().setLngLat(e.features[0].geometry.coordinates).setHTML('<b>Event type:</b> ' + e.features[0].properties.event_type + '<b><br/>Date:</b> ' + e.features[0].properties.event_date).addTo(map);
     });
     
     
