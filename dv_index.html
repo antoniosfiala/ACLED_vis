@@ -220,7 +220,7 @@
             }
             
             #notes{
-                margin-top: 10%;
+                margin-top: 5%;
             }
             
             #source_ref{
@@ -263,7 +263,7 @@
 
             <!STORY SECTION>
             <div class="section">
-                <h3>Story:</h3>
+                <h3>Story for February 2020:</h3>
                 
                 <p1><i>Enjoy exploring geo-coded conflict event data from ACLED in a scale sensitive visualisation, taking better care to show the location of events and display relevant information at appropriate scale.</i></p1><br><br>
                 <p1><b>Event intensity at lower zoom levels (<u7>||</u7><u8>||</u8><u9>||</u9>)</b></p1><br>
@@ -306,7 +306,8 @@
             
             <!NOTES>
             <div id="notes">
-                <p1>Current zoom level (<p2 id="zoom_level"></p2>)</p1><br>
+                <p1><b>Visualisation info:</b></p1><br>
+                <p1>Current map zoom level (<p2 id="zoom_level"></p2>)</p1><br>
                 <p1>Map centroid longitude latitude (<p2 id="centre_of_map"></p2>)</p1>
             </div>
         </div>
@@ -549,6 +550,7 @@
             //===================================
 
         });
+        
     </script>
     
     <!MAP INTERACTIVITY (CLICK/HOVER TO SEE POINT DETAILS)>
@@ -590,7 +592,25 @@
             map.getCanvas().style.cursor = '';
             popup.remove();
         });
-
+        
+        //=== Scale bar
+        var scale = new mapboxgl.ScaleControl({
+            maxWidth: 100,
+            unit: 'metric'
+        });
+        map.addControl(scale);
+        
+        //=== Navigation control
+        var nav = new mapboxgl.NavigationControl({
+            showCompass: false,
+            showZoom: true,
+            visualizePitch: false
+        });
+        
+        map.addControl(nav, 'bottom-left');
+        
+        // disable map rotation using right click + drag
+        map.dragRotate.disable();
         
     </script>
     
@@ -613,9 +633,12 @@
             if (zoom > zoom_transition) {
                 document.getElementById("pointmap").style.display = "block"; 
                 document.getElementById("heatmap").style.display = "none"; 
+                document.getElementById("legend_title").style.display = "none"; 
+                
             }else {
                 document.getElementById("pointmap").style.display = "none";
                 document.getElementById("heatmap").style.display = "block";
+                document.getElementById("legend_title").style.display = "none"; 
             }
        });
 
