@@ -1,6 +1,6 @@
 # Digital visualisation assignment 1:
 ## Visualising conflict using ACLED data
 
-This link takes you to the work in progress site visualising [ACLED conflict data](http://acleddata.com)
+This assignment takes inspiration from the work of [ACLED](http://acleddata.com), uses their conflict event database to experiment with alternative means of visulisation to provide users a more accessible experienced.
 
-[Open map](dv_index.html)
+The map can be found [here](dv_index.html)
