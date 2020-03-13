@@ -7,4 +7,4 @@ The map can be found [here](dv_index.html)
 
 ### Resources used include:
 - Number of mapbox tutorials
-- CASA0003 tutorial materials
+- CASA0003 tutorial material
