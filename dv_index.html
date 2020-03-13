@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+    
+<!Website header>
+    <head>
+        <title>Visualising conflict using ACLED data</title>
+        <meta charset='utf-8' />
+        <meta name="description" content = "A visualisation of conflict event data using ACLED data utilising a dynamic heatmap.">
+        <meta name="author" content = "Antonios Fiala">
+
+        <!Used to scale the user's view (viewport) accordingly to the device used>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+        <!This script brings in mapbox>
+        <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+        <!This script brings in mapbox stylesheet (css)>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css" rel="stylesheet" />
+
+        <!Style of the page>
+        <!Circles: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_circles>
+        <!https://blog.mapbox.com/introducing-heatmaps-in-mapbox-gl-js-71355ada9e6c>
+        
+        <style>
+            
+            body{
+                font-family: Arial;
+                text-align: left;
+                font-size: 12px;
+                color: gray;
+                background-color: #1a1a1a;
+            }
+    
+            #left_third {
+                padding: 0.5%;
+                width: 24%;
+                height: 100%;
+                float: left;
+            }
+            
+                hr.new1 {
+                    border: 1px solid gray
+                };
+            
+                #title_div {
+                    width: 100%;
+                    height: 5%;
+                }
+            
+                .section{
+                    width: 100%;
+                    height: 50%;
+                }
+            
+            #right_two_thirds {
+                width: 75%;
+                float: right;
+            }
+            
+            #map_main{
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
+            
+                #map {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    width: 100%;
+                }
+            
+            #legend_title{
+                padding: 2%;
+                margin: 0;
+            }
+            
+            .map-overlay {
+                position: absolute;
+                top: 3%;
+                left: 25%;
+                background: rgba(255, 255, 255, 0.9);
+                margin-left: 20px;
+                overflow: auto;
+                border-radius: 3px;
+                width: 200px;
+              }
+            
+            .legend_window{
+                padding: 2%;
+                margin: 0;
+            }
+            
+            #heatbox{
+                margin: auto;
+                height: 10px;
+                width: 80%;
+                background-image: linear-gradient(-90deg,rgb(28,144,153),rgb(103,169,207),rgb(166,189,219), rgb(208,209,230));
+                border: 1px solid gray;
+            }
+            u7{
+                color: rgba(166,189,219,1);
+            }
+            
+            u8{
+                color: rgba(103,169,207,1);
+            }
+            
+            u9{
+                color: rgba(28,144,153,1);
+            }
+            
+            #heatmap{
+                
+            }
+            
+            #HeatLeftTag{
+                float: left;
+                width: 50%;
+                margin: 0;
+                margin-bottom: 3%;
+            }
+            
+            #HeatRightTag{
+                float: right;
+                width: 50%;
+                text-align: right;
+                margin: 0;
+                margin-bottom: 3%;
+            }
+            
+            .legend_heading{
+                margin: 0px;
+                margin-bottom: 2px;
+            }
+            
+            .heat_categories{
+                width: 100%;
+            }
+            
+            
+            #pointmap{
+                
+            }
+            
+            .dot {
+                float:left;
+                height: 15px;
+                width: 15px;
+                border-radius: 50%;
+                display: inline-block;
+                margin-left: 5%;
+                margin-right: 5%;
+                border: 1px solid gray;
+                
+            }
+            
+            #battle_colour{
+                background-color: rgba(202,0,32,1);
+            }
+            u5{
+                color: rgba(202,0,32,1);
+            }
+            
+            #remote_colour{
+                background-color: rgba(244,165,130,1);
+            }
+            u4{
+                color: rgba(244,165,130,1);
+            }
+            
+            #violence_colour{
+                background-color: rgba(247,247,247,1);
+            }
+            u3{
+                color: rgba(247,247,247,1);
+            }
+            
+            #riots_colour{
+                background-color: rgba(146,197,222,1);
+            }
+            u2{
+                color: rgba(146,197,222,1);
+            }
+            
+            #protest_colour{
+                background-color: rgba(5,113,176,1);
+            }
+            u1{
+                color: rgba(5,113,176,1);
+            }
+            
+            #multi_colour{
+                background-color: rgba(255,255,191,1);
+            }
+            u6{
+                color: rgba(255,255,191,1);
+            }
+            
+            #button9{
+                background-color: rgba(255, 255, 255, 0.9);
+                color: gray;
+                border-radius: 4px;
+                width: 91%;
+                height: 20px;
+                margin-bottom: 1%;
+                margin-top: 1%;
+                outline: none;
+            }
+        
+            
+            .button {
+                background-color: rgba(255, 255, 255, 0.9);
+                color: gray;
+                border-radius: 4px;
+                width: 45%;
+                height: 20px;
+                margin-bottom: 1%;
+                margin-top: 1%;
+                outline: none;
+            }
+            
+            #notes{
+                margin-top: 10%;
+            }
+            
+            #source_ref{
+                padding: 2%;
+                font-size: 6px;
+            }
+            
+            p1{
+                font-size: 10px;
+            }
+            
+            p2{
+                font-size: 10px;
+            }
+            
+            p3{
+                font-size: 8px;
+            }
+
+
+        </style>
+    </head>
+
+<!Body of the site>
+<body>
+    <!NO CONTENT JUST IN THE BODY>
+    
+    <!CONTAINER TO DIVIDE BODY INTO LEFT THIRD AND RIGHT TWO THIRDS (MAP)>
+    <div id="container">
+        <!LEFT ONE THIRD CONTAINS TITLES, CONTROLS AND BASIC DESCRIPTIONS>
+        <div id="left_third">
+            
+            <!TITLE SECTION>
+            <div id="title_div">
+                <h1 id ="page_title">Visualising conflict:</h1>
+                <p><i>Telling a <b>scale</b> sensitive story with ACLED data</i></p>
+            </div>
+
+            <hr class="new1">
+
+            <!STORY SECTION>
+            <div class="section">
+                <h3>Story:</h3>
+                
+                <p1><i>Enjoy exploring geo-coded conflict event data from ACLED in a scale sensitive visualisation, taking better care to show the location of events and display relevant information at appropriate scale.</i></p1><br><br>
+                <p1><b>Event intensity at lower zoom levels (<u7>||</u7><u8>||</u8><u9>||</u9>)</b></p1><br>
+                <p1><i>Explore event intensity to give the user a sence of where events are happening.</i></p1><br><br>
+                
+                
+                <p1><b>Event categorisationat higher zoom levels (<u1>•</u1><u2>•</u2><u3>•</u3><u4>•</u4><u5>•</u5><u6>•</u6>)</b></p1><br>
+                <p1><i>Explore the position and categorisation of events alongside relevant topographical and points of interest information.</i></p1>
+                
+                <p3><i><br><u1>• </u1>protests <u2>• </u2>riots <u3>• </u3>violence against civilians <br><u4>• </u4>explosions/remote violence <u5>• </u5>battles <u6>• </u6>combination/multiple events</i></p3>
+            </div>
+            
+            <!CONTINENT NAVIGATION>
+            <div class="section">
+                <h3>Go places:</h3>
+                <p1><i>Click a button to fly to the continent and see the <b>intensity</b> of events.</i></p1><br>
+                <button class="button" id="button1">See the world</button>
+                <button class="button" id="button2">Europe</button>
+                <button class="button" id="button3">North America</button>
+                <button class="button" id="button4">Africa</button>
+                <button class="button" id="button5">South America</button>
+                <button class="button" id="button6">Asia</button>
+                <button class="button" id="button7">Oceania</button>
+                <button class="button" id="button8">South-East Asia</button>
+                <button id="button9">Middle-East and Central Asia</button>
+                        
+            </div>
+            
+            <!COUNTRY/LOCAL NAVIGATION>
+            <div class="section">
+                <h3>Go to conflicts:</h3>
+                <p1><i>Click a button to fly to a specific conflict or area of interest to see the <b>type</b> of event.</i></p1><br>
+                <button class="button" id="button10">Syria</button>
+                <button class="button" id="button11">Azerbaijan-Armenia</button>
+                <button class="button" id="button12">Donetsk (UKR-RUS)</button>
+                <button class="button" id="button13">Tripoli (Libya)</button>
+            </div>
+            
+            <hr class="new1">
+            
+            <!NOTES>
+            <div id="notes">
+                <p1>Current zoom level (<p2 id="zoom_level"></p2>)</p1><br>
+                <p1>Map centroid longitude latitude (<p2 id="centre_of_map"></p2>)</p1>
+            </div>
+        </div>
+        
+        <!RIGHT TWO THIRDS CONTAIN MAP AND LEGEND OVERLAY>
+        <div id="right_two_thirds">
+            <!MAP>
+            <div id="map_main">
+                <div id="map"></div>
+            </div>
+            
+            <!LEGEND DIVS - MANY DIVS THAT HIDE/SHOW BASED ON ZOOM LEVEL!>
+            <div class='map-overlay'>
+                <div class='map-overlay-inner'>
+                    <h3 id="legend_title">Legend</h3>
+                    
+                    <!HEATMAP LEGEND>
+                    <div class = "legend_window" id="heatmap">
+                    <h4 class = "legend_heading">Heatmap (event count)</h4>
+                        <div id="heatbox"></div>
+                        <div id="heattext">
+                        <p id= "HeatLeftTag">Low</p>
+                        <p id= "HeatRightTag">High</p>
+                        </div>
+                    </div>
+                    
+                    <!POINTMAP LEGEND>
+                    <div class = "legend_window" id="pointmap">
+                        <h4 class = "legend_heading">Point layer (event category)</h4>
+                        <div class = "heat_categories" id="battles">
+                            <span class="dot" id="battle_colour"></span>
+                            <p class = "heat_cat_text" id="battle_text"> Battles</p>
+                        </div>
+                        
+                        <div class = "heat_categories" id="remote">
+                            <span class="dot" id="remote_colour"></span>
+                            <p class = "heat_cat_text" id="remote_text"> Explosions/Remote violence</p>
+                        </div>
+                        
+                        <div class = "heat_categories" id="remote">
+                            <span class="dot" id="violence_colour"></span>
+                            <p class = "heat_cat_text" id="violence_text"> Violence against civilians</p>
+                        </div>
+                        
+                        <div class = "heat_categories" id="remote">
+                            <span class="dot" id="riots_colour"></span>
+                            <p class = "heat_cat_text" id="riots_text"> Riots</p>
+                        </div>
+                        
+                        <div class = "heat_categories" id="remote">
+                            <span class="dot" id="protest_colour"></span>
+                            <p class = "heat_cat_text" id="protest_text"> Protests</p>
+                        </div>
+                        
+                        <div class = "heat_categories" id="remote">
+                            <span class="dot" id="multi_colour"></span>
+                            <p class = "heat_cat_text" id="multi_text"> Multiple types</p>
+                        </div>
+                                          
+                    </div>
+                    
+                    <p id="source_ref"><b>Data source:</b> <a href="https://acleddata.com/dashboard/#/dashboard">acled database </a><i>(accessed March 2020)</i><br><br><b>Data timeframe: </b>01.02.2020 - 29.02.2020</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+        
+    <!DEFAULT LEGEND BEHAVIOUR (HIDE)>
+    <script>
+        //HIDE BOTH DIVS BEFORE LOAD OR OTHER ACTIONS ARE TRIGGERED
+        document.getElementById("pointmap").style.display = "none";
+        document.getElementById("heatmap").style.display = "none";
+    </script>
+    
+    <!MAPPING VARIABLES, KEYS AND COLOURS>
+    <script>    
+        //===GENERAL VARIABLES AND INFORMATION
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYW50b25pb3NmaWFsYSIsImEiOiJjazduaWNyMDMwMndnM3NtdHMwY2Jya2s1In0.v4PaAiRVs6h3h7lNNfjZqw';
+
+        //global parameters
+        var centre_lat = 34;//30
+        var centre_long = 69;//46
+        
+        var zoom_start = 1;
+        var zoom_transition = 5;
+        var zoom_max = 6;
+
+        var heat_property = "events"
+        
+        //Colour palettes (5 colours)
+        var colour_heat_green = ['rgba(236,222,239,0)','rgb(208,209,230)','rgb(166,189,219)','rgb(103,169,207)','rgb(28,144,153)'];
+        var colour_heat_BlRd = ['rgba(253,141,60,0)','rgba(5,113,176,1)','rgba(146,197,222,1)','rgba(247,247,247,1)','rgba(244,165,130,1)','rgba(202,0,32,1)'];
+
+        //DATA sources:  
+        var acled_tileset_20_id = "mapbox://antoniosfiala.dk2omdui";
+        var acled_tileset_20_layer = "ACLED_feb_20-47ai7w";
+        
+        var acled_tileset_15_id = "mapbox://antoniosfiala.7g19v0qn";
+        var acled_tileset_15_layer = "ACLED_feb_15_all-0x9609";
+        
+        //VARIABLES THAT MAP WILL LOAD
+        var acled_mapbox_live = acled_tileset_20_id;
+        var acled_source_name_live = acled_tileset_20_layer;
+    </script>
+    
+    <!MAPPING JAVASCRIPT LOADING 1 HEAT AND 1 POINT LAYER>
+    <script>
+        
+        //CREATE INSTANCE OF MAP WITH CORRECT STYLE, CENTRE AND ZOOM
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/antoniosfiala/ck7hwy44f51od1iodg0d0um6u', 
+            center: [centre_long, centre_lat], // starting position [lng, lat]
+            zoom: zoom_start // starting zoom
+        });
+
+        //Create an on load function to load in data
+        map.on('load', function() {            
+            
+            //===ADDING HEATMAP LAYER
+            map.addLayer({
+                'id':'Event_live_all',
+                'type': 'heatmap',
+                'source':{
+                    type: "vector",
+                    url: acled_mapbox_live
+                },
+                'source-layer': acled_source_name_live,
+                'layout':{
+                    'visibility': 'visible'
+                },
+                'maxzoom': zoom_max,
+                'paint': {
+                    //FOLLOW THIS https://docs.mapbox.com/help/tutorials/make-a-heatmap-with-mapbox-gl-js/
+
+                    //Weighting of each point
+                    'heatmap-weight': {
+                        property: heat_property,
+                        type: 'exponential',
+                        stops: [
+                            [zoom_start,0.5],
+                            [zoom_transition,2]
+                        ]
+                    },
+
+                    //Intensity, helps smoothen across zoom levels
+                    'heatmap-intensity':{
+                        stops: [
+                            //[zoom level, intensity level]
+                            //gaps get scaled
+                            [zoom_start,1],
+                            [zoom_max,1]
+                        ]
+                    },
+
+                    //Colour
+                    'heatmap-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['heatmap-density'],
+                        //different densities between 0-1 get different colours
+                        //this is almost like a 'filter' layer
+                        0,      colour_heat_green[0],
+                        //breakpoints for actual colours
+                        0.25,   colour_heat_green[1],
+                        0.5,    colour_heat_green[2],
+                        0.75,   colour_heat_green[3],
+                        1.0,    colour_heat_green[4]
+                    ],
+
+                    //Radius as zoom increases
+                    'heatmap-radius': {
+                        stops: [
+                            //[zoom,radius]
+                            [zoom_start,3],
+                            [zoom_max,15]
+                        ]
+                    },
+
+                    //Opacity, do for whole layer rather than with colours
+                    'heatmap-opacity':{
+                        default: 1,
+                        stops:[
+                            [zoom_transition,0.5],
+                            [zoom_max+1,0]
+                            
+                        ]
+                    },
+                    //Nothing else to add for now
+                }
+
+            },'waterway-label'); //closes layer
+            
+            //===================================
+            
+            //===ADDING POINT LAYER FOR MAIN EVENT CATEGORIES
+            map.addLayer({
+                id: 'Event-point',
+                type: 'circle',
+                'source':{
+                    type: "vector",
+                    url: acled_mapbox_live
+                },
+                'source-layer': acled_source_name_live,
+                'layout':{
+                    'visibility': 'visible'
+                },
+                minzoom: zoom_transition,
+
+                paint:{
+                    'circle-radius': 4,
+
+                    'circle-color': {
+                        property: 'event_type',
+                        type: 'categorical',
+                        stops:[
+                            ['Battles','rgba(202,0,32,0.75)'],
+                            ['Explosions/Remote violence','rgba(244,165,130,0.75)'],
+                            ['Violence against civilians','rgba(247,247,247,0.75)'],
+                            ['Riots','rgba(146,197,222,0.75)'],
+                            ['Protests','rgba(5,113,176,0.75)'],
+                            ['Multiple Types','rgba(255,255,191,0.75)'],
+                            
+                            //['Strategic developments','rgba(255,255,255,0.1)'] //removed from raw data
+                        ]
+                    },
+                    'circle-stroke-color': 'white',
+                    'circle-stroke-width': 0.1,
+                    'circle-opacity': {
+                        default: 0,
+                        stops: [
+                            [zoom_transition,0],                            
+                            [zoom_max,1]
+                        ]
+                    }
+                }
+            },'waterway-label'); //closes layer
+            
+            //===================================
+
+        });
+    </script>
+    
+    <!MAP INTERACTIVITY (CLICK/HOVER TO SEE POINT DETAILS)>
+    <script>
+        //=== INTERACTIVITY WITH POINTS - CLICK TO REVEAL INFO (LEAVE IN CASE USER WANTS PERSISTANT INFO)
+        map.on('click', 'Event-point',function(e) {
+            new mapboxgl.Popup().setLngLat(e.features[0].geometry.coordinates).setHTML('<b>Event type:</b> ' + e.features[0].properties.event_type + '<b><br/>Events:</b> ' + e.features[0].properties.events + '<b><br/>Fatalities:</b> ' + e.features[0].properties.fatalities).addTo(map);
+        });
+        
+        //=== MOUSE HOVER TUTORIAL HERE: https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
+        var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+        
+        map.on('mouseenter', 'Event-point', function(e) {
+            // Change the cursor style as a UI indicator.
+            map.getCanvas().style.cursor = 'pointer';
+
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var description = '<b>Event type:</b> ' + e.features[0].properties.event_type + '<b><br/>Events:</b> ' + e.features[0].properties.events + '<b><br/>Fatalities:</b> ' + e.features[0].properties.fatalities;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+            // Populate the popup and set its coordinates
+            // based on the feature found.
+        popup
+            .setLngLat(coordinates)
+            .setHTML(description)
+            .addTo(map);
+        });
+
+        map.on('mouseleave', 'Event-point', function() {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        
+    </script>
+    
+    <!LISTENERS FOR LEGEND AND REPORTING (LOAD,ZOOM,MOVE)>
+    <script>
+        //LISTENER FOR WHEN THE MAP IS LOADED; INITIAL LEGEND SET UP AND REPORTING
+        map.on('load', function(){
+            //calculate variables
+            var zoom = map.getZoom();
+            var zoom_report = zoom.toFixed(2);
+            
+            var centre_point = map.getCenter();
+            var centre_point_report = `${centre_point.lat.toFixed(2)},${centre_point.lng.toFixed(2)}`;
+            
+            //report back to elements
+            document.getElementById("zoom_level").innerHTML = zoom_report;
+            document.getElementById("centre_of_map").innerHTML = centre_point_report;
+
+            //legend control based on zoom level in relation to the transition of the two layers
+            if (zoom > zoom_transition) {
+                document.getElementById("pointmap").style.display = "block"; 
+                document.getElementById("heatmap").style.display = "none"; 
+            }else {
+                document.getElementById("pointmap").style.display = "none";
+                document.getElementById("heatmap").style.display = "block";
+            }
+       });
+
+        //LISTENER FOR ZOOMING OF MAP AMEND LEGEND VIEW AND REPORT BACK
+        map.on("zoom", function(){
+
+            //calculate variables
+            var zoom = map.getZoom();
+            var zoom_report = zoom.toFixed(2);
+            
+            var centre_point = map.getCenter();
+            var centre_point_report = `${centre_point.lat.toFixed(2)},${centre_point.lng.toFixed(2)}`;
+
+            //report back to elements
+            document.getElementById("zoom_level").innerHTML = zoom_report;
+            document.getElementById("centre_of_map").innerHTML = centre_point_report;
+
+            //legend control based on zoom level in relation to the transition of the two layers
+            if (zoom > zoom_transition) {
+                document.getElementById("pointmap").style.display = "block"; 
+                document.getElementById("heatmap").style.display = "none"; 
+            }else {
+                document.getElementById("pointmap").style.display = "none";
+                document.getElementById("heatmap").style.display = "block";
+            }
+        });
+
+        //UPDATE CENTRE WHEN MAP IS MOVED
+        map.on("move", function(){
+            //calculate variables
+            var centre_point = map.getCenter();
+            var centre_point_report = `${centre_point.lat.toFixed(2)},${centre_point.lng.toFixed(2)}`;
+
+            //report when map is 'moved' or panned
+            document.getElementById("centre_of_map").innerHTML = centre_point_report; 
+        });        
+    </script>
+    
+    <!CODE FOR FLY BUTTON BEHAVIOUR>
+    <script>
+        //Long/Lat/Zoom
+        var World = [69,34,1];
+        var Europe = [30,56,3];
+        var NorthAm = [-74.5,36.5,3];
+        var Africa = [30.5,1.7,2.6];
+        var SouthAm = [-63.5,-11.1,2.45];
+        var Asia = [116,35,2.3];
+        var Oceania = [161.7,-24.5,2.5];
+        var SEA = [128.5,11,3.4];
+        var MECA = [61,32,3.5];
+        
+        var Syria = [40,35,6.2];
+        var AzerArmen = [47.5,40,6.6];
+        var Donetsk = [38,47,6];
+        var Tripoli = [13.24,32.765,10.3];
+        
+        //See the world button
+        document.getElementById('button1').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        World[0],
+        World[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: World[2]
+        });
+        });
+        
+        //See EUROPE button
+        document.getElementById('button2').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Europe[0],
+        Europe[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Europe[2]
+        });
+        });
+        
+        //See NORTH AMERICA button
+        document.getElementById('button3').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        NorthAm[0],
+        NorthAm[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: NorthAm[2]
+        });
+        });
+        
+        //See AFRICA button
+        document.getElementById('button4').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Africa[0],
+        Africa[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Africa[2]
+        });
+        });
+    
+        //See SOUTH AMERICA button
+        document.getElementById('button5').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        SouthAm[0],
+        SouthAm[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: SouthAm[2]
+        });
+        });
+        
+        //See ASIA button
+        document.getElementById('button6').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Asia[0],
+        Asia[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Asia[2]
+        });
+        });
+        
+        //See OCEANIA button
+        document.getElementById('button7').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Oceania[0],
+        Oceania[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Oceania[2]
+        });
+        });
+        
+        //See SEA button
+        document.getElementById('button8').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        SEA[0],
+        SEA[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: SEA[2]
+        });
+        });
+        
+        //See MIDDLE EAST AND CENTRAL ASIA button
+        document.getElementById('button9').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        MECA[0],
+        MECA[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: MECA[2]
+        });
+        });
+        
+        //======SPECIFIC AREAS
+        //See SYRIA button
+        document.getElementById('button10').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Syria[0],
+        Syria[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Syria[2]
+        });
+        });
+        
+        //See AZERBAIJAN AND ARMENIA button
+        document.getElementById('button11').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        AzerArmen[0],
+        AzerArmen[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: AzerArmen[2]
+        });
+        });
+        
+        //See DONETSK button
+        document.getElementById('button12').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Donetsk[0],
+        Donetsk[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Donetsk[2]
+        });
+        });
+        
+        //See TRIPOLI button
+        document.getElementById('button13').addEventListener('click', function() {
+        //Based on: https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+        map.flyTo({
+        center: [
+        Tripoli[0],
+        Tripoli[1]
+        ],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+        zoom: Tripoli[2]
+        });
+        });
+    </script>
+
+</body>
+</html>
