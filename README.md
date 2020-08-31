@@ -3,7 +3,7 @@
 
 This assignment takes inspiration from the work of [ACLED](http://acleddata.com), uses their conflict event database to experiment with alternative means of visulisation to provide users a more accessible experience.
 
-The map can be found [here](index.html)
+The map can be found [here](https://antoniosfiala.github.io/UCL_DV_global_conflict/index)
 
 ### Resources used include:
 - Number of mapbox tutorials
